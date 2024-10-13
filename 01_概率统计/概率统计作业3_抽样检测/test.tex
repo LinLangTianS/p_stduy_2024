@@ -1,0 +1,194 @@
+%导言区
+\documentclass[a4paper,12pt]{ctexart} %A4纸，小四号字体
+\usepackage{multirow}
+\usepackage{amsmath, amsfonts, amssymb} 
+\usepackage{xcolor}
+\usepackage{mdframed} 
+\usepackage{graphicx}   
+\usepackage{booktabs,array}
+\usepackage{listings} 
+\usepackage{geometry}
+\usepackage{indentfirst}
+\usepackage{caption}
+\usepackage{enumerate}
+\usepackage{pifont}
+\usepackage{CJK}
+\usepackage{setspace}
+\usepackage{url}
+\usepackage{cleveref,cite,eqnarray}
+\usepackage{subfigure}
+\usepackage{booktabs}  
+\usepackage{threeparttable}  %表格样式
+\mdtheorem[style=theoremstyle]{defi}{$\blacklozenge$定义}
+\renewcommand{\arraystretch}{1} %控制行高
+\usepackage{amsmath} %花体2号
+\usepackage{mathrsfs} %花体
+\usepackage{amssymb}%花体3号
+\usepackage{CJK}
+\usepackage{setspace}
+\usepackage{cleveref,cite,eqnarray}
+\usepackage{subfigure}
+\usepackage{subfigure}
+\usepackage{float}
+\pagestyle{plain}
+\pagenumbering{Roman}
+% 算法
+\usepackage[noend]{algpseudocode}
+\usepackage{algorithmicx,algorithm}
+\floatname{algorithm}{方案}
+\renewcommand{\algorithmicrequire}{\textbf{输入:}}
+\renewcommand{\algorithmicensure}{\textbf{输出:}}
+
+%设置代码边框颜色的
+\usepackage{fontspec}
+\newfontfamily\yaheiconsola{YaHei.Consolas.1.11b.ttf}
+\setmonofont[
+Contextuals={Alternate},
+ItalicFont = Fira Code Retina Nerd Font Complete.otf     % to avoid font warning
+]{YaHei.Consolas.1.11b.ttf}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{NavyBlue}{rgb}{0.0, 0.0, 0.50}
+\definecolor{PineGreen}{rgb}{0.0, 0.47, 0.44}
+\lstset
+{
+	tabsize=4,
+	captionpos=b,
+	numbers=left,                    
+	numbersep=1em,                  
+	sensitive=true,
+	showtabs=false, 
+	frame=shadowbox,
+	breaklines=true,
+	keepspaces=true,                 
+	showspaces=false,                
+	showstringspaces=false,
+	breakatwhitespace=false,         
+	basicstyle=\yaheiconsola,
+	keywordstyle=\color{NavyBlue},
+	commentstyle=\color{codegreen},
+	numberstyle=\color{gray},
+	stringstyle=\color{PineGreen!90!black},
+	rulesepcolor=\color{red!20!green!20!blue!20}
+}
+\geometry{a4paper,left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm} 
+\pagestyle{plain}
+\pagenumbering{Roman}
+% 文章信息
+\title{作业3——验收方案}
+\author{舒双林 2024122141}
+\date{\today}
+
+%正文区
+\begin{document}
+	
+\maketitle
+\setcounter{page}{1}
+\pagenumbering{arabic}
+	
+% \tableofcontents  % 目录
+% \newpage
+
+\section{待解决问题}
+请建立数学模型，解决下述问题：
+
+供应商声称一批零配件（零配件1或零配件2）的次品率不会超过某个标称值。企业准备采用抽样检测方法是否接受从供应商
+购买的这批零配件，检测费用由企业自行承担，请为企业设计检测次数尽可能少的抽样检测方案。
+
+如果标称值为$10\%$,根据你们的抽样检测方案，针对以下两种情形，分别给出具体结果：
+
+(1)在$95\%$的信度下认定零配件次品率超过标称值，则拒收这批零配件；
+
+(2)在$90\%$的信度下认为零配件次品率不超过标称值，则接收这批零配件。
+
+\section{(N,n,c)验收方案}
+\subsection{方案设计}
+
+考虑一种(N,n,c)验收方案：在一批零配件中进行一次样本量为N的抽样检测，预先规定合格判定数为$c$。假设样本中的次品数量为n，认为
+\begin{itemize}
+	\item 当$n \leqslant c$时，认为这批零配件合格，接受该批产品；
+	\item 当$n > c$时，认为这批零配件不合格，拒收该批产品；
+\end{itemize}
+
+不妨假设真实次品率$p_0 = 10\%$，定义$L(p)$为在次品率为$p$时接受这批零配件的概率，在零件总量十分庞大的情形下，将其视为二项分布，此时有
+\begin{equation}
+	L\left( p,c \right) =\sum_{k=0}^c{C_{N}^{k} p^k\left( 1-p \right) ^{N-k}}
+\end{equation}
+
+首先，根据二项分布，在样本量$N=30,c=3$的条件下，可以计算得出：
+\begin{equation}
+	L(p_0 ,c) =\sum_{k=0}^3{C_{30}^{k} p_0^k\left( 1-p_0 \right) ^{30-k}}=0.647439
+\end{equation}
+
+从而得到
+
+\begin{align*}
+	P\left( n \leqslant 3 \right) &=L(0.1,3)=0.647439
+	\\
+	P\left( n> 3  \right) &=1-P\left( n \leqslant 3 \right)=0.352561
+\end{align*}
+其中，n为这批零件检测到的次品个数。
+
+其次，在大样本下，可将其视为正态分布，结合两种情形，分别构建置信度为$\alpha$的单侧置信区间，进行假设检验。
+
+
+\subsection{仿真模拟}
+\subsubsection{流程设定}
+设定的判定流程如下所示：
+\begin{center}
+	\begin{minipage}{0.95\textwidth}
+		\begin{algorithm}[H]%[!htp]
+			\caption{(N,n,c)验收方案} %算法的名字
+			\label{1}
+			{\bf 输入:} 次品率$p$，样本数$N$，合格判定数$c$,模拟次数K\\
+			{\bf 过程:} 
+			\begin{algorithmic}[1]
+				\State 令$K_{acc} = 0$为接受次数，$K_{rej} = 0$为拒绝次数
+				\For{$i = 1$ to $K$} % For 语句，需要和EndFor对应
+				\State $samples \sim B(N,p) $
+				\State 令n等于二项分布中次品个数
+				\If{$d \leqslant 1 $}
+				\State $K_{acc} = K_{acc} + 1$
+				\State 认为这批零配件合格；
+				\Else
+				\State $K_{rej} = K_{rej} + 1$
+				\State 认为该批零配件不合格。
+				\EndIf
+				\State 	$i=i+1$
+				\EndFor
+				\State 	\textbf{end}
+			\end{algorithmic}
+			{\bf 输出:} %算法的结果输出
+			$K_{acc}$，$K_{rej}$
+		\end{algorithm}
+	\end{minipage}
+\end{center}
+
+通过上述流程，对不同参数(p)下的$K_{acc}$，$K_{rej}$进行模拟，得到其分布情况，从而进行假设检验。
+
+\subsubsection{问题(1)的模拟与检验}
+取定次品率$p = 0.15$，应用python对方案进行模拟，得到如下结果：
+\begin{table}[H]
+    \centering
+    \caption{模拟结果统计（$4*1000$次，$p=0.15$）}
+    \begin{tabular}{ccccc}
+    \toprule[1.5pt]
+        ~ & seed=0 & seed=1 & seed=2 & seed=3 \\ \midrule[0.75pt]
+        接受次数 & 3276 & 3271 & 3318 & 3307 \\ 
+        拒绝次数 & 6724 & 6729 & 6682 & 6693 \\ \bottomrule[1.5pt]
+    \end{tabular}
+\end{table}
+
+紧接着进行假设检验。检验原假设与备择假设
+$$H_0:p_0 \leqslant0.1 \quad vs \quad H_1:p_0>0.1$$
+
+以接受率$L\left( p,c \right)$为检验统计量，取显著性水平$\alpha = 0.95$，拒绝域为$\left\{ L\leqslant L\left( P_0,c \right) +z_{\alpha}\sqrt{\frac{\hat{p}\left( 1-\hat{p} \right)}{N}} \right\} $
+
+
+\subsubsection{问题(2)的模拟与检验}
+
+\begin{appendix}
+
+\section{附录}
+\lstinputlisting[language=python]{123.py}
+\end{appendix}
+\end{document}
